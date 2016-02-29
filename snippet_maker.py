@@ -1,6 +1,7 @@
 import sublime, sublime_plugin
 import os, re
-from glob import iglob
+import fnmatch
+
 
 template = """<snippet>
   <!-- Example: Hello, ${1:this} is a ${2:snippet}. -->
@@ -59,11 +60,13 @@ class MakeSnippetCommand(sublime_plugin.TextCommand):
 
 class EditSnippetCommand(sublime_plugin.WindowCommand):
     def run(self):
-        snippets = [
-            [os.path.basename(filepath), filepath]
-                for filepath
-                    in iglob(os.path.join(sublime.packages_path(), 'User', 'MySnippets', '*.sublime-snippet'))]
 
+        matches = []
+        for root, dirnames, filenames in os.walk(os.path.join(sublime.packages_path(), 'User', 'MySnippets')):
+            for filename in fnmatch.filter(filenames, '*.sublime-snippet'):
+                matches.append(os.path.join(root, filename))
+        snippets = [[os.path.basename(filepath), filepath] for filepath in matches]
+ 
         def on_done(index):
             if index >= 0:
                 self.window.open_file(snippets[index][1])

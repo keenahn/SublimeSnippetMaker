@@ -24,3 +24,7 @@ Added additional input for description.
 ### Edit by @ctf0
 
 the plugin now save snippets @ (User/MySnippets) instead of (User)
+
+### Edit by @lambdamusic
+
+the plugin now searches for snippets recursively under (User/MySnippets) thus allowing for further nesting (eg by snippet category)
