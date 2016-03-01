@@ -3,6 +3,11 @@ import os, re
 import fnmatch
 
 
+# 2016-02-29
+# @lambdamusic: snippets file names start with the scope info (for better indexing)
+
+
+
 template = """<snippet>
   <!-- Example: Hello, ${1:this} is a ${2:snippet}. -->
   <content><![CDATA[
@@ -38,7 +43,9 @@ class MakeSnippetCommand(sublime_plugin.TextCommand):
 
     def make_snippet(self, file_name):
         if re.match('^\w+\.sublime\-snippet$', file_name):
-            file_path = os.path.join(sublime.packages_path(), 'User', 'MySnippets', file_name)
+            # prefix the file with the scope name, for better indexing
+            _scopes = self.scopes.replace(" ", "").replace(",", "_") + "."
+            file_path = os.path.join(sublime.packages_path(), 'User', 'MySnippets', _scopes+file_name)
 
             if os.path.exists(file_path):
                 if sublime.ok_cancel_dialog('Override %s?' % file_name) is False:
